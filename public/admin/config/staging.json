@@ -1,0 +1,6 @@
+{
+    "routerBase": "/admin/",
+    "env": {
+        "backendUrl": ""
+    }
+}

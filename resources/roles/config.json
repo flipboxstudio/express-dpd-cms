@@ -1,0 +1,38 @@
+{
+	"categories": {
+		"GET": "*",
+		"POST": "admin",
+		"PUT": "admin",
+		"DELETE": "admin",
+		"properties": {}
+	},
+	"menus": {
+		"GET": "*",
+		"POST": "admin",
+		"PUT": "admin",
+		"DELETE": "admin",
+		"properties": {}
+	},
+	"posts": {
+		"GET": "*",
+		"POST": "admin",
+		"PUT": "admin",
+		"DELETE": "admin",
+		"properties": {}
+	},
+	"pages": {
+		"GET": "*",
+		"POST": "admin",
+		"PUT": "admin",
+		"DELETE": "admin",
+		"properties": {}
+	},
+	"users": {
+		"GET": "admin,user",
+		"POST": "admin",
+		"PUT": "admin",
+		"DELETE": "admin",
+		"properties": {}
+	},
+	"type": "EventResource"
+}

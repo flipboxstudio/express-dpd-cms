@@ -1,0 +1,19 @@
+{
+  "engines": {
+    "node": ">= 4.0"
+  },
+  "dependencies": {
+    "deployd": "^1.0.0",
+    "dpd-acl-roles-permissions": "^1.2.7",
+    "dpd-clientlib": "^0.0.1",
+    "dpd-count": "0.0.1",
+    "dpd-dashboard": "^0.0.1",
+    "dpd-event": "0.0.2",
+    "dpd-fileupload": "git+https://github.com/aqidd/dpd-fileupload.git",
+    "dpd-jobs": "^0.14.0",
+    "dpd-mail": "^0.1.4",
+    "express": "^4.16.2",
+    "express-urlrewrite": "^1.2.0",
+    "socket.io": "^2.0.4"
+  }
+}

@@ -1,0 +1,6 @@
+{
+    "routerBase": "",
+    "env": {
+        "backendUrl": "http://localhost:8080"
+    }
+}

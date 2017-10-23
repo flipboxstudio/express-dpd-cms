@@ -1,0 +1,6 @@
+{
+    "routerBase": "/karir/admin/",
+    "env": {
+        "backendUrl": "https://www.frisianflag.com/api-karir"
+    }
+}

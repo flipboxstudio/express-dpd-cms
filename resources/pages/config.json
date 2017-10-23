@@ -1,0 +1,93 @@
+{
+	"type": "Collection",
+	"properties": {
+		"lang": {
+			"name": "lang",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "lang",
+			"order": 0
+		},
+		"type": {
+			"name": "type",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "type",
+			"order": 1
+		},
+		"slug": {
+			"name": "slug",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "slug",
+			"order": 2
+		},
+		"author": {
+			"name": "author",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "author",
+			"order": 3
+		},
+		"title": {
+			"name": "title",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "title",
+			"order": 4
+		},
+		"content": {
+			"name": "content",
+			"type": "object",
+			"typeLabel": "object",
+			"required": true,
+			"id": "content",
+			"order": 5
+		},
+		"featuredImage": {
+			"name": "featuredImage",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "featuredImage",
+			"order": 6
+		},
+		"tags": {
+			"name": "tags",
+			"type": "array",
+			"typeLabel": "array",
+			"required": false,
+			"id": "tags",
+			"order": 7
+		},
+		"meta": {
+			"name": "meta",
+			"type": "object",
+			"typeLabel": "object",
+			"required": false,
+			"id": "meta",
+			"order": 8
+		},
+		"createdAt": {
+			"name": "createdAt",
+			"type": "date",
+			"typeLabel": "date",
+			"required": false,
+			"id": "createdAt",
+			"order": 9
+		},
+		"updatedAt": {
+			"name": "updatedAt",
+			"type": "date",
+			"typeLabel": "date",
+			"required": false,
+			"id": "updatedAt",
+			"order": 10
+		}
+	}
+}

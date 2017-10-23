@@ -1,0 +1,11 @@
+{
+	"type": "Mail",
+	"host": "stmp.mailgun.org",
+	"port": 25,
+	"ssl": true,
+	"username": "username@mailgun.org",
+	"password": "password@mailgun",
+	"defaultFromAddress": "test@mailgun.org",
+	"internalOnly": false,
+	"secret": "mailsecret"
+}
