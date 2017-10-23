@@ -44,6 +44,12 @@ First of all, this is the Deployd Dashboard : useful for data management
 
 ![Deployd](https://puu.sh/y5ahk/40b71a18cd.png)
 
+Also, API documentations
+
+![API](https://puu.sh/y5aLL/473d542876.png)
+
+![API](https://puu.sh/y5aM8/b3063a3f59.png)
+
 Then, this is the admin panel created with Vuetify
 
 ![Admin](https://puu.sh/y5asj/7c54a9dda1.png)
