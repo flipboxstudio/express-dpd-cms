@@ -43,7 +43,7 @@
       </v-content>
     </main>
     <v-footer fixed>
-      <span>Frisian Flag &copy; 2017</span>
+      <span>Flipbox &copy; 2017</span>
     </v-footer>
   </v-app>
 </template>

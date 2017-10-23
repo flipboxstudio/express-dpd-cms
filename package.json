@@ -10,7 +10,6 @@
     "dpd-dashboard": "^0.0.1",
     "dpd-event": "0.0.2",
     "dpd-fileupload": "git+https://github.com/aqidd/dpd-fileupload.git",
-    "dpd-jobs": "^0.14.0",
     "dpd-mail": "^0.1.4",
     "express": "^4.16.2",
     "express-urlrewrite": "^1.2.0",
