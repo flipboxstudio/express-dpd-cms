@@ -2,10 +2,13 @@
 <template>
   <div>
     <v-form ref="pageForm">
-      <v-text-field label="Title" v-model="page.title" required :readonly="readonly" :rules="requiredField"></v-text-field>
-      <v-text-field label="Slug" v-model="page.slug" required :readonly="readonly" :rules="requiredField"></v-text-field>
-      <v-text-field label="Subtitle" v-model="page.content.subtitle" :readonly="readonly"></v-text-field>
-      <v-text-field label="Content" v-model="page.content.content" required multi-line :readonly="readonly" :rules="requiredField"></v-text-field>
+      <v-card class="pl-3 pr-3 pt-3 pb-3">
+        <v-text-field label="Title" v-model="page.title" required :readonly="readonly" :rules="requiredField"></v-text-field>
+        <v-text-field label="Slug" v-model="page.slug" required :readonly="readonly" :rules="requiredField"></v-text-field>
+        <v-text-field label="Subtitle" v-model="page.content.subtitle" :readonly="readonly"></v-text-field>
+      </v-card>
+
+      <text-editor :content="page.content.content" @update="page.content.content = $event" :readonly="readonly" :rules="requiredField"/>
 
       <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
     </v-form>
@@ -14,13 +17,15 @@
 
 <script>
 import FormAction from '~/components/FormAction'
+import TextEditor from '~/components/TextEditor'
 import form from '~/mixins/form'
 
 export default {
   layout: 'admin',
   mixins: [form],
   components: {
-    FormAction
+    FormAction,
+    TextEditor
   },
   data () {
     return {
@@ -44,50 +49,57 @@ export default {
       this.checkReadOnly()
     },
     fetchData (id) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-      dpd.pages.get(id, function(res, err) {
-        vm.loading = false
-        if(res) {
-          vm.page = res
+      dpd.pages.get(id, (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.page = res
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     submitData () {
-      let vm = this
       if (this.$refs.pageForm.validate()) {
-        vm.loading = true
+        this.loading = true
         /* eslint-disable */
-        dpd.pages.post(vm.page, function(res, err) {
-          vm.loading = false
-          if(res) {
-            vm.backToList()
+        dpd.pages.post(this.page, (res, err) => {
+          this.loading = false
+          if(err) {
+            this.showError(err)
           } else {
-            // enabling below line result in double execution (??)
-            // var error = err.message || res.message || 'Unknown Error'
-            alert(err.message || JSON.stringify(err.errors))
+            if(this.validResponse(res)) {
+              this.backToList()
+            } else {
+              this.showError(res)
+            }
           }
         })
         /* eslint-enable */
       }
     },
     deleteData (id = this.$route.query.view) {
-      let vm = this
       if (this.page.type === 'static') {
         alert('cannot delete static page ' + this.page.title)
       } else {
-        vm.loading = true
+        this.loading = true
         /* eslint-disable */
-          dpd.pages.del(id, function (res, err) {
-            vm.loading = false
-            if(res) {
-                vm.backToList()
+          dpd.pages.del(id,  (res, err) => {
+            this.loading = false
+            if(err) {
+              this.showError(err)
             } else {
-                alert(err.message || JSON.stringify(err.errors))
+              if(this.validResponse(res)) {
+                  this.backToList()
+              } else {
+                  this.showError(res)
+              }
             }
           })
           /* eslint-enable */

@@ -2,17 +2,18 @@
 
 <template>
     <div>
+        <p v-if="!readonly" class="img-module-title">{{title}}</p>
         <input type="file" id="input-file-upload" name="fileupload" class="form-control-file" :disabled="readonly" v-if="!readonly" v-on:change="setFiles"/>
         <v-btn :loading="loadingUpload" @click="uploadFile" outline :disabled="readonly" v-if="!readonly">Upload</v-btn>
         <div class="form-group">
-            <img :src="uploadedImageUrl.thumbnail" height="200px" v-if="uploadedImageUrl"/>
+            <img :src="uploadedImageUrl.thumbnail" height="200px" v-if="uploadedImageUrl && preview == true"/>
         </div>
     </div>
 </template>
 
 <script>
 export default {
-  props: ['imageData', 'maxFileSize', 'readonly'],
+  props: ['imageData', 'maxFileSize', 'readonly', 'preview', 'title'],
   data () {
     return {
       loadingUpload: false,
@@ -45,7 +46,7 @@ export default {
       let vm = this
       let subdir = ''
       let comments = ''
-      let uniqueFilename = ''
+      let uniqueFilename = true
       let thumbnail = true
       let thumbnailWidth = 400
 
@@ -75,3 +76,11 @@ export default {
 
 }
 </script>
+
+<style scoped>
+.img-module-title {
+  color: rgba(0,0,0,.54);
+  font-size: 9pt;
+  margin-bottom: -5px;
+}
+</style>

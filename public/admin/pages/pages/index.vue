@@ -64,45 +64,54 @@ export default {
   },
   methods: {
     fetchItems (query) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       query.sortBy('updatedAt', 'desc')
       /* eslint-disable */
-        dpd.pages.get(query.get(), function (res, err) {
-          vm.loading = false
-          if(res) {
-              vm.items = res
+        dpd.pages.get(query.get(),  (res, err) => {
+          this.loading = false
+          if(err) {
+            this.showError(err)
           } else {
-              alert(err.message || JSON.stringify(err.errors))
+            if(this.validResponse(res)) {
+                this.items = res
+            } else {
+                this.showError(res)
+            }
           }
         })
       /* eslint-enable */
     },
     fetchTotalItems () {
-      let vm = this
       /* eslint-disable */
-        dpd.pages.get(new DpdQuery().count().get(), function (res, err) {
-          if(res) {
-              vm.totalItems = res.count
+        dpd.pages.get(new DpdQuery().count().get(),  (res, err) => {
+          if(err) {
+            this.showError(err)
           } else {
-              alert(err.message || JSON.stringify(err.errors))
+            if(this.validResponse(res)) {
+                this.totalItems = res.count
+            } else {
+                this.showError(res)
+            }
           }
         })
       /* eslint-enable */
     },
     deleteItem (item) {
-      var vm = this
       if (item.type === 'static') {
         alert('cannot delete static page ' + item.title)
       } else {
-        vm.loading = true
+        this.loading = true
         /* eslint-disable */
-          dpd.pages.del(item.id, function (res, err) {
-            vm.loading = false
-            if(res) {
-                vm.initData()
+          dpd.pages.del(item.id,  (res, err) => {
+            this.loading = false
+            if(err) {
+              this.showError(err)
             } else {
-                alert(err.message || JSON.stringify(err.errors))
+              if(this.validResponse(res)) {
+                  this.initData()
+              } else {
+                  this.showError(res)
+              }
             }
           })
           /* eslint-enable */

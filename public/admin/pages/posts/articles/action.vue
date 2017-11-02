@@ -2,28 +2,28 @@
 <template>
   <div>
     <v-form ref="articleForm">
-      <v-text-field label="Title" v-model="article.title" required :readonly="readonly" :rules="requiredField"></v-text-field>
-      <v-text-field label="Slug" v-model="article.slug" required :readonly="readonly" :rules="requiredField"></v-text-field>
-      <v-select label="Category" :async-loading="loadingCategory" :items="categories" v-model="article.category" item-text="name" item-value="id" return-object :readonly="readonly"></v-select>
-      <v-layout row wrap>
-        <v-flex xs12 md6 :class="{disabled: readonly}">
-          <date-time-picker
-            label="Date"
-            :datetime="article.content.date"
-            @input="updateDate">
-          </date-time-picker>
-        </v-flex>
-        <image-upload :imageData.sync="article.featuredImage" :maxFileSize="2048" :readonly="readonly"></image-upload>  
-      </v-layout>
+      <v-card class="pl-3 pr-3 pt-3 pb-3">
+        <v-text-field label="Title" v-model="article.title" required :readonly="readonly" :rules="requiredField"></v-text-field>
+        <v-text-field label="Slug" v-model="article.slug" required :readonly="readonly" :rules="requiredField"></v-text-field>
+        <v-select label="Category" :async-loading="loadingCategory" :items="categories" v-model="article.category" item-text="name" item-value="id" return-object :readonly="readonly"></v-select>
+        <v-layout row wrap>
+          <v-flex xs12 md6 :class="{disabled: readonly}">
+            <date-time-picker
+              label="Date"
+              :datetime="article.content.date"
+              @input="updateDate">
+            </date-time-picker>
+          </v-flex>
+          <image-upload title="Featured Image" :imageData.sync="article.featuredImage" :maxFileSize="2048" :readonly="readonly" :preview="true"/>
+        </v-layout>
 
-      <v-layout row wrap>
-        <v-checkbox label="Featured" v-model="article.isFeatured" light :disabled="readonly"></v-checkbox>
-        <v-checkbox label="Active" v-model="article.isActive" light :disabled="readonly"></v-checkbox>
-      </v-layout>
+        <v-layout row wrap>
+          <v-checkbox label="Featured" v-model="article.isFeatured" light :disabled="readonly"></v-checkbox>
+          <v-checkbox label="Active" v-model="article.isActive" light :disabled="readonly"></v-checkbox>
+        </v-layout>
+      </v-card>
 
-      <no-ssr>
-        <wysiwyg label="Content" v-model="article.content.content" :class="{disabled: readonly}" placeholder="Your content here..." required :rules="requiredField"/>
-      </no-ssr>
+      <text-editor :content="article.content.content" @update="article.content.content = $event" :readonly="readonly" :rules="requiredField"/>
 
       <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
     </v-form>
@@ -34,13 +34,14 @@
 import ImageUpload from '~/components/ImageUpload'
 import FormAction from '~/components/FormAction'
 import DateTimePicker from '~/components/DateTimePicker'
+import TextEditor from '~/components/TextEditor'
 import DpdQuery from '~/helpers/dpd-query'
 import form from '~/mixins/form'
 
 export default {
   layout: 'admin',
   mixins: [form],
-  components: {ImageUpload, FormAction, DateTimePicker},
+  components: {ImageUpload, FormAction, DateTimePicker, TextEditor},
   data () {
     return {
       loadingCategory: true,
@@ -87,64 +88,73 @@ export default {
       this.article.content.date = ev
     },
     fetchCategories () {
-      let vm = this
-      vm.loadingCategory = true
+      this.loadingCategory = true
       /* eslint-disable */
-      dpd.categories.get(function(res, err) {
-        vm.loadingCategory = false
-        if(res) {
-          vm.categories = res
+      dpd.categories.get((res, err) => {
+        this.loadingCategory = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.categories = res
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     fetchData (id) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       let query = new DpdQuery().filterBy('id', id).filterBy('type', 'article')
       /* eslint-disable */
-      dpd.posts.get(query.get(), function(res, err) {
-        vm.loading = false
-        if(res) {
-          vm.article = res
+      dpd.posts.get(query.get(), (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.article = res
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     submitData () {
-      let vm = this
-
       if (this.$refs.articleForm.validate()) {
-        vm.loading = true
-        vm.article.category = vm.article.category.id
+        this.loading = true
+        this.article.category = this.article.category.id
         /* eslint-disable */
-        dpd.posts.post(vm.article, function(res, err) {
-          vm.loading = false
-          if(res) {
-            vm.backToList()
+        dpd.posts.post(this.article, (res, err) => {
+          this.loading = false
+          if(err) {
+            this.showError(err)
           } else {
-            // enabling below line result in double execution (??)
-            // var error = err.message || res.message || 'Unknown Error'
-            alert(err.message || JSON.stringify(err.errors))
+            if(this.validResponse(res)) {
+              this.backToList()
+            } else {
+              this.showError(res)
+            }
           }
         })
         /* eslint-enable */
       }
     },
     deleteData (id = this.$route.query.view) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-        dpd.posts.del(id, function (res, err) {
-          vm.loading =false
-            if(res) {
-                vm.backToList()
+        dpd.posts.del(id,  (res, err) => {
+          this.loading =false
+            if(err) {
+              this.showError(err)
             } else {
-                alert(err.message || JSON.stringify(err.errors))
+              if(this.validResponse(res)) {
+                  this.backToList()
+              } else {
+                  this.showError(res)
+              }
             }
         })
         /* eslint-enable */

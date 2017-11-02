@@ -76,44 +76,52 @@ export default {
   },
   methods: {
     fetchItems (query) {
-      let vm = this
-      vm.loading = true
-      console.log(query)
+      this.loading = true
       query.sortBy('updatedAt', 'desc').filterBy('type', 'event')
       /* eslint-disable */
-      dpd.posts.get(query.get(), function (res, err) {
-        vm.loading = false
-        if(res) {
-            vm.items = res
+      dpd.posts.get(query.get(), (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-            alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+              this.items = res
+          } else {
+              this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     fetchTotalItems () {
-      let vm = this
       let query = new DpdQuery().filterBy('type', 'event').count()
       /* eslint-disable */
-      dpd.posts.get(query.get(), function (res, err) {
-        if(res) {
-            vm.totalItems = res.count
+      dpd.posts.get(query.get(),  (res, err) => {
+        if(err) {
+          this.showError(err)
         } else {
-            alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+              this.totalItems = res.count
+          } else {
+              this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     deleteItem (id) {
-      var vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-      dpd.posts.del(id, function (res, err) {
-        vm.loading = false
-        if(res) {
-            vm.initData()
+      dpd.posts.del(id,  (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-            alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+              this.initData()
+          } else {
+              this.showError(res)
+          }
         }
       })
       /* eslint-enable */

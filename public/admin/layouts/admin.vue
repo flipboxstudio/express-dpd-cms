@@ -66,11 +66,10 @@ export default {
   },
   methods: {
     logout () {
-      let vm = this
       /* eslint-disable */
-        dpd.users.logout(function(result, error) {
+        dpd.users.logout((result, error) => {
           if(!error) {
-            vm.$router.push('/')
+            this.$router.push('/')
           } else {
             alert(error.message)
           }

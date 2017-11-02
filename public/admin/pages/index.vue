@@ -47,15 +47,14 @@ export default {
   },
   methods: {
     submitLogin () {
-      let vm = this
-      let query = new DpdQuery().login(vm.username, vm.password)
+      let query = new DpdQuery().login(this.username, this.password)
       if (this.$refs.loginForm.validate()) {
-        vm.loading = true
+        this.loading = true
         /* eslint-disable */
-        dpd.users.login(query.get(), function(result, error) {
-          vm.loading = false
+        dpd.users.login(query.get(), (result, error) => {
+          this.loading = false
           if(result) {
-            vm.validateProfile()
+            this.validateProfile()
           } else {
             alert(error.message || JSON.stringify(error.errors))
           }
@@ -64,11 +63,10 @@ export default {
       }
     },
     validateProfile () {
-      let vm = this
       /* eslint-disable */
-        dpd.users.me(function(result, error) {
+        dpd.users.me((result, error) => {
           if(result && result.roles) {
-            result.roles.includes("admin") ? vm.$router.push('dashboard') : alert('you are not an admin!')
+            result.roles.includes("admin") ? this.$router.push('dashboard') : alert('you are not an admin!')
           } else {
             alert(error.message || JSON.stringify(error.errors))
           }

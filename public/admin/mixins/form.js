@@ -69,6 +69,16 @@ export default {
     },
     edit () {
       this.$router.push(this.$route.path.replace(/\/+$/, '') + '/?edit=' + this.$route.query.view)
+    },
+    validResponse (res) {
+      if (res && res.statusCode !== 401) {
+        return true
+      } else {
+        return false
+      }
+    },
+    showError (val) {
+      alert(val.message || JSON.stringify(val.errors) || 'unknown error!')
     }
   }
 }

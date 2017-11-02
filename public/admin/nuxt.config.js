@@ -24,11 +24,13 @@ module.exports = {
   plugins: [
     '~/plugins/vuetify.js',
     '~/plugins/no-ssr.js',
-    {src: '~/plugins/vue-wysiwyg.js', ssr: false}
+    { src: '~/plugins/vue-quill-editor.js', ssr: false }
   ],
   css: [
     '~/assets/style/app.styl',
-    '~/node_modules/vue-wysiwyg/dist/vueWysiwyg.css'
+    'quill/dist/quill.snow.css',
+    'quill/dist/quill.bubble.css',
+    'quill/dist/quill.core.css'
   ],
   /*
   ** Customize the progress-bar color

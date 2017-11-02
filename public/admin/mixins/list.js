@@ -45,6 +45,16 @@ export default {
     },
     edit (id) {
       this.$router.push(this.$route.path.replace(/\/+$/, '') + '/action/?edit=' + id)
+    },
+    validResponse (res) {
+      if (res && res.statusCode !== 401) {
+        return true
+      } else {
+        return false
+      }
+    },
+    showError (val) {
+      alert(val.message || JSON.stringify(val.errors) || 'unknown error!')
     }
   }
 }

@@ -2,13 +2,15 @@
 <template>
   <div>
     <v-form>
-      <v-text-field label="Name" v-model="user.username" required :readonly="readonly"></v-text-field>
-      <v-select label="Role" :async-loading="loadingRole" :items="roles" v-model="user.roles" item-text="name" item-value="name" return-object :readonly="readonly" v-if="!readonly"></v-select>
-      <v-text-field label="Role" v-model="user.roles" readonly v-else></v-text-field>
-      
-      <v-text-field label="Password" :append-icon="pwdHidden ? 'visibility' : 'visibility_off'" 
-                  :append-icon-cb="() => (pwdHidden = !pwdHidden)" :type="pwdHidden ? 'password' : 'text'" v-model="user.password" 
-                  :rules="requiredField" required v-if="!readonly"></v-text-field>
+      <v-card class="pl-3 pr-3 pt-3 pb-3">
+        <v-text-field label="Name" v-model="user.username" required :readonly="readonly"></v-text-field>
+        <v-select label="Role" :async-loading="loadingRole" :items="roles" v-model="user.roles" item-text="name" item-value="name" return-object :readonly="readonly" v-if="!readonly"></v-select>
+        <v-text-field label="Role" v-model="user.roles" readonly v-else></v-text-field>
+        
+        <v-text-field label="Password" :append-icon="pwdHidden ? 'visibility' : 'visibility_off'" 
+                    :append-icon-cb="() => (pwdHidden = !pwdHidden)" :type="pwdHidden ? 'password' : 'text'" v-model="user.password" 
+                    :rules="requiredField" required v-if="!readonly"></v-text-field>
+      </v-card>
 
       <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
     </v-form>
@@ -46,59 +48,71 @@ export default {
       this.checkReadOnly()
     },
     fetchUserRoles () {
-      let vm = this
-      vm.loadingRole = true
+      this.loadingRole = true
       /* eslint-disable */
-      dpd.userroles.get(function(res, err) {
-        vm.loadingRole = false
-        console.log(res, err)
-        if(res) {
-          vm.roles = res
+      dpd.userroles.get((res, err) => {
+        this.loadingRole = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+
+        }
+        if(this.validResponse(res)) {
+          this.roles = res
+        } else {
+          this.showError(res)
         }
       })
       /* eslint-enable */
     },
     fetchData (id) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-      dpd.users.get(id, function(res, err) {
-        vm.loading = false
-        if(res) {
-          vm.user = res
+      dpd.users.get(id, (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.user = res
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     submitData () {
-      let vm = this
-      vm.loading = true
-      vm.user.roles = [vm.user.roles.name]
+      this.loading = true
+      this.user.roles = [this.user.roles.name]
       /* eslint-disable */
-      dpd.users.post(vm.user, function(res, err) {
-        vm.loading = false
-        if(res) {
-          vm.backToList()
+      dpd.users.post(this.user, (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.backToList()
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     deleteData (id = this.$route.query.view) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-        dpd.users.del(id, function (res, err) {
-          vm.loading =false
-            if(res) {
-                vm.backToList()
+        dpd.users.del(id,  (res, err) => {
+          this.loading =false
+            if(err) {
+              this.showError(err)
             } else {
-                alert(err.message || JSON.stringify(err.errors))
+              if(this.validResponse(res)) {
+                  this.backToList()
+              } else {
+                  this.showError(res)
+              }
             }
         })
         /* eslint-enable */

@@ -2,7 +2,9 @@
 <template>
   <div>
     <v-form>
-      <v-text-field label="Name" v-model="category.name" required :readonly="readonly"></v-text-field>
+      <v-card class="pl-3 pr-3 pt-3 pb-3">
+        <v-text-field label="Name" v-model="category.name" required :readonly="readonly"></v-text-field>
+      </v-card>
 
       <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
     </v-form>
@@ -34,45 +36,52 @@ export default {
       this.checkReadOnly()
     },
     fetchData (id) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-      dpd.categories.get(id, function(res, err) {
-        vm.loading = false
-        if(res) {
-          vm.category = res
+      dpd.categories.get(id, (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.category = res
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     submitData () {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-      dpd.categories.post(vm.category, function(res, err) {
-        vm.loading = false
-        if(res) {
-          vm.backToList()
+      dpd.categories.post(this.category, (res, err) => {
+        this.loading = false
+        if(err) {
+          this.showError(err)
         } else {
-          // enabling below line result in double execution (??)
-          // let error = err.message || res.message || 'Unknown Error'
-          alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+            this.backToList()
+          } else {
+            this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     deleteData (id = this.$route.query.view) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-        dpd.categories.del(id, function (res, err) {
-          vm.loading =false
-            if(res) {
-                vm.backToList()
+        dpd.categories.del(id,  (res, err) => {
+          this.loading =false
+            if(err) {
+              this.showError(err)
             } else {
-                alert(err.message || JSON.stringify(err.errors))
+              if(this.validResponse(res)) {
+                  this.backToList()
+              } else {
+                  this.showError(res)
+              }
             }
         })
         /* eslint-enable */

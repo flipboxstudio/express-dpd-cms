@@ -52,43 +52,51 @@ export default {
   },
   methods: {
     fetchItems (query = new DpdQuery()) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       query.sortBy('id', 'desc')
       /* eslint-disable */
-        dpd.users.get(query.get(), function (res, err) {
-          console.log(res, err)
-          vm.loading = false
-          if(res) {
-              vm.items = res
+        dpd.users.get(query.get(),  (res, err) => {
+          this.loading = false
+          if(err) {
+            this.showError(err)
           } else {
-              alert(err.message || JSON.stringify(err.errors))
+            if(this.validResponse(res)) {
+                this.items = res
+            } else {
+                this.showError(res)
+            }
           }
         })
       /* eslint-enable */
     },
     fetchTotalItems () {
-      let vm = this
       /* eslint-disable */
-      dpd.userscount.get(function (res, err) {
-        if(res) {
-            vm.totalItems = res.count
+      dpd.userscount.get( (res, err) => {
+        if(err) {
+          this.showError(err)
         } else {
-            alert(err.message || JSON.stringify(err.errors))
+          if(this.validResponse(res)) {
+              this.totalItems = res.count
+          } else {
+              this.showError(res)
+          }
         }
       })
       /* eslint-enable */
     },
     deleteItem (id) {
-      let vm = this
-      vm.loading = true
+      this.loading = true
       /* eslint-disable */
-        dpd.users.del(id, function (res, err) {
-          vm.loading = false
-          if(res) {
-              vm.initData()
+        dpd.users.del(id,  (res, err) => {
+          this.loading = false
+          if(err) {
+            this.showError(err)
           } else {
-              alert(err.message || JSON.stringify(err.errors))
+            if(this.validResponse(res)) {
+                this.initData()
+            } else {
+                this.showError(res)
+            }
           }
         })
         /* eslint-enable */
