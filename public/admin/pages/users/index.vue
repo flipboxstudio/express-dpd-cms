@@ -55,7 +55,7 @@ export default {
       this.loading = true
       query.sortBy('id', 'desc')
       /* eslint-disable */
-        dpd.users.get(query.get(),  (res, err) => {
+        dpd.user.get(query.get(),  (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)
@@ -71,7 +71,7 @@ export default {
     },
     fetchTotalItems () {
       /* eslint-disable */
-      dpd.userscount.get( (res, err) => {
+      dpd.usercount.get( (res, err) => {
         if(err) {
           this.showError(err)
         } else {
@@ -87,7 +87,7 @@ export default {
     deleteItem (id) {
       this.loading = true
       /* eslint-disable */
-        dpd.users.del(id,  (res, err) => {
+        dpd.user.del(id,  (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)

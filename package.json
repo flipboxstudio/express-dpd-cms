@@ -5,9 +5,9 @@
   "dependencies": {
     "deployd": "^1.1.1",
     "dpd-acl-roles-permissions": "^1.2.7",
-    "dpd-clientlib": "0.0.1",
+    "dpd-clientlib": "1.0.0",
     "dpd-count": "0.0.1",
-    "dpd-dashboard": "0.0.1",
+    "dpd-dashboard": "1.1.3",
     "dpd-event": "0.0.2",
     "dpd-fileupload": "git+https://github.com/aqidd/dpd-fileupload.git",
     "dpd-mail": "^0.1.4",

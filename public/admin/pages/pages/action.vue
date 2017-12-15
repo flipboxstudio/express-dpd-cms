@@ -51,7 +51,7 @@ export default {
     fetchData (id) {
       this.loading = true
       /* eslint-disable */
-      dpd.pages.get(id, (res, err) => {
+      dpd.page.get(id, (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -69,7 +69,7 @@ export default {
       if (this.$refs.pageForm.validate()) {
         this.loading = true
         /* eslint-disable */
-        dpd.pages.post(this.page, (res, err) => {
+        dpd.page.post(this.page, (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)
@@ -90,7 +90,7 @@ export default {
       } else {
         this.loading = true
         /* eslint-disable */
-          dpd.pages.del(id,  (res, err) => {
+          dpd.page.del(id,  (res, err) => {
             this.loading = false
             if(err) {
               this.showError(err)

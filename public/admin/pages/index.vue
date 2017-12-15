@@ -51,7 +51,7 @@ export default {
       if (this.$refs.loginForm.validate()) {
         this.loading = true
         /* eslint-disable */
-        dpd.users.login(query.get(), (result, error) => {
+        dpd.user.login(query.get(), (result, error) => {
           this.loading = false
           if(result) {
             this.validateProfile()
@@ -64,7 +64,7 @@ export default {
     },
     validateProfile () {
       /* eslint-disable */
-        dpd.users.me((result, error) => {
+        dpd.user.me((result, error) => {
           if(result && result.roles) {
             result.roles.includes("admin") ? this.$router.push('dashboard') : alert('you are not an admin!')
           } else {

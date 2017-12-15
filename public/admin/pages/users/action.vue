@@ -50,7 +50,7 @@ export default {
     fetchUserRoles () {
       this.loadingRole = true
       /* eslint-disable */
-      dpd.userroles.get((res, err) => {
+      dpd.userrole.get((res, err) => {
         this.loadingRole = false
         if(err) {
           this.showError(err)
@@ -68,7 +68,7 @@ export default {
     fetchData (id) {
       this.loading = true
       /* eslint-disable */
-      dpd.users.get(id, (res, err) => {
+      dpd.user.get(id, (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -86,7 +86,7 @@ export default {
       this.loading = true
       this.user.roles = [this.user.roles.name]
       /* eslint-disable */
-      dpd.users.post(this.user, (res, err) => {
+      dpd.user.post(this.user, (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -103,7 +103,7 @@ export default {
     deleteData (id = this.$route.query.view) {
       this.loading = true
       /* eslint-disable */
-        dpd.users.del(id,  (res, err) => {
+        dpd.user.del(id,  (res, err) => {
           this.loading =false
             if(err) {
               this.showError(err)

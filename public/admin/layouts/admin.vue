@@ -67,7 +67,7 @@ export default {
   methods: {
     logout () {
       /* eslint-disable */
-        dpd.users.logout((result, error) => {
+        dpd.user.logout((result, error) => {
           if(!error) {
             this.$router.push('/')
           } else {

@@ -96,7 +96,7 @@ export default {
     fetchCategories () {
       this.loadingCategory = true
       /* eslint-disable */
-      dpd.categories.get((res, err) => {
+      dpd.category.get((res, err) => {
         this.loadingCategory = false
         if(err) {
           this.showError(err)
@@ -114,7 +114,7 @@ export default {
       this.loading = true
       let query = new DpdQuery().filterBy('id', id).filterBy('type', 'event')
       /* eslint-disable */
-      dpd.posts.get(query.get(), (res, err) => {
+      dpd.post.get(query.get(), (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -134,7 +134,7 @@ export default {
         this.event.isActive = true
         this.event.category = this.event.category.id
         /* eslint-disable */
-        dpd.posts.post(this.event, (res, err) => {
+        dpd.post.post(this.event, (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)
@@ -152,7 +152,7 @@ export default {
     deleteData (id = this.$route.query.view) {
       this.loading = true
       /* eslint-disable */
-        dpd.posts.del(id,  (res, err) => {
+        dpd.post.del(id,  (res, err) => {
           this.loading =false
             if(err) {
               this.showError(err)

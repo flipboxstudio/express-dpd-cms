@@ -67,7 +67,7 @@ export default {
       this.loading = true
       query.sortBy('updatedAt', 'desc')
       /* eslint-disable */
-        dpd.pages.get(query.get(),  (res, err) => {
+        dpd.page.get(query.get(),  (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)
@@ -83,7 +83,7 @@ export default {
     },
     fetchTotalItems () {
       /* eslint-disable */
-        dpd.pages.get(new DpdQuery().count().get(),  (res, err) => {
+        dpd.page.get(new DpdQuery().count().get(),  (res, err) => {
           if(err) {
             this.showError(err)
           } else {
@@ -102,7 +102,7 @@ export default {
       } else {
         this.loading = true
         /* eslint-disable */
-          dpd.pages.del(item.id,  (res, err) => {
+          dpd.page.del(item.id,  (res, err) => {
             this.loading = false
             if(err) {
               this.showError(err)

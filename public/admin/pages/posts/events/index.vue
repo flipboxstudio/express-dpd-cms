@@ -79,7 +79,7 @@ export default {
       this.loading = true
       query.sortBy('updatedAt', 'desc').filterBy('type', 'event')
       /* eslint-disable */
-      dpd.posts.get(query.get(), (res, err) => {
+      dpd.post.get(query.get(), (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -96,7 +96,7 @@ export default {
     fetchTotalItems () {
       let query = new DpdQuery().filterBy('type', 'event').count()
       /* eslint-disable */
-      dpd.posts.get(query.get(),  (res, err) => {
+      dpd.post.get(query.get(),  (res, err) => {
         if(err) {
           this.showError(err)
         } else {
@@ -112,7 +112,7 @@ export default {
     deleteItem (id) {
       this.loading = true
       /* eslint-disable */
-      dpd.posts.del(id,  (res, err) => {
+      dpd.post.del(id,  (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)

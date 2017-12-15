@@ -38,7 +38,7 @@ export default {
     fetchData (id) {
       this.loading = true
       /* eslint-disable */
-      dpd.categories.get(id, (res, err) => {
+      dpd.category.get(id, (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -55,7 +55,7 @@ export default {
     submitData () {
       this.loading = true
       /* eslint-disable */
-      dpd.categories.post(this.category, (res, err) => {
+      dpd.category.post(this.category, (res, err) => {
         this.loading = false
         if(err) {
           this.showError(err)
@@ -72,7 +72,7 @@ export default {
     deleteData (id = this.$route.query.view) {
       this.loading = true
       /* eslint-disable */
-        dpd.categories.del(id,  (res, err) => {
+        dpd.category.del(id,  (res, err) => {
           this.loading =false
             if(err) {
               this.showError(err)

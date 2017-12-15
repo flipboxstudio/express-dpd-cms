@@ -1,33 +1,33 @@
 {
-	"categories": {
+	"category": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"menus": {
+	"menu": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"posts": {
+	"post": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"pages": {
+	"page": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"users": {
+	"user": {
 		"GET": "admin,user",
 		"POST": "admin",
 		"PUT": "admin",

@@ -24,7 +24,7 @@ if(this.type === 'event') {
 
 if(ctx.query.id && !roles.includes("admin")) {
     this.meta.visit++
-    dpd.posts.put(this, function(res, err) {
+    dpd.post.put(this, function(res, err) {
         if(err) console.log(err)
     })
 }
@@ -35,7 +35,7 @@ if(!this.featuredImage) {
 }
 
 if(this.category) {
-    dpd.categories.get(this.category, function(res, err) {
+    dpd.category.get(this.category, function(res, err) {
         vm.category = res || {}
     })
 }

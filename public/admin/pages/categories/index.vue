@@ -55,7 +55,7 @@ export default {
       this.loading = true
       query.sortBy('id', 'desc')
       /* eslint-disable */
-        dpd.categories.get(query.get(), (res, err) => {
+        dpd.category.get(query.get(), (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)
@@ -72,7 +72,7 @@ export default {
     fetchTotalItems () {
       let query = new DpdQuery().count()
       /* eslint-disable */
-        dpd.categories.get(query.get(),  (res, err) => {
+        dpd.category.get(query.get(),  (res, err) => {
           if(err) {
             this.showError(err)
           } else {
@@ -88,7 +88,7 @@ export default {
     deleteItem (id) {
       this.loading = true
       /* eslint-disable */
-        dpd.categories.del(id,  (res, err) => {
+        dpd.category.del(id,  (res, err) => {
           this.loading = false
           if(err) {
             this.showError(err)
