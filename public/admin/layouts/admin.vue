@@ -57,7 +57,7 @@ export default {
         { to: '/dashboard', title: 'Dashboard', icon: 'apps' },
         { to: '/users', title: 'Users', icon: 'folder' },
         { to: '/pages', title: 'Pages', icon: 'folder' },
-        { to: '/categories', title: 'Categories', icon: 'folder' },
+        { to: '/posts/categories', title: 'Post Categories', icon: 'folder' },
         { to: '/posts/events', title: 'Events', icon: 'folder' },
         { to: '/posts/articles', title: 'Articles', icon: 'folder' }
       ],
@@ -66,15 +66,12 @@ export default {
   },
   methods: {
     logout () {
-      /* eslint-disable */
-        dpd.user.logout((result, error) => {
-          if(!error) {
-            this.$router.push('/')
-          } else {
-            alert(error.message)
-          }
+      this.$axios.post('/user/logout')
+        .then((res) => {
+          this.$router.push('/')
+        }).catch((err) => {
+          alert(err.message)
         })
-      /* eslint-enable */
     }
   }
 }

@@ -1,6 +1,7 @@
 {
     "routerBase": "/admin/",
     "env": {
-        "backendUrl": ""
+        "backendUrl": "",
+        "defaultLocale": "id"
     }
 }

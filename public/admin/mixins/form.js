@@ -30,6 +30,9 @@ export default {
     this.checkState()
   },
   methods: {
+    switchLocale (val) {
+      console.warn('please implement switchLocale inside form', val)
+    },
     initData () {
       console.warn('using default initData')
       if (this.$route.query.view || this.$route.query.edit) {

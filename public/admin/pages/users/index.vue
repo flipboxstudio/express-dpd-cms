@@ -54,52 +54,45 @@ export default {
     fetchItems (query = new DpdQuery()) {
       this.loading = true
       query.sortBy('id', 'desc')
-      /* eslint-disable */
-        dpd.user.get(query.get(),  (res, err) => {
+      this.$axios.get(`/user?${query.toString()}`)
+        .then((res) => {
           this.loading = false
-          if(err) {
-            this.showError(err)
+          if (this.validResponse(res.data)) {
+            this.items = res.data
           } else {
-            if(this.validResponse(res)) {
-                this.items = res
-            } else {
-                this.showError(res)
-            }
+            this.showError(res.data)
           }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-      /* eslint-enable */
     },
     fetchTotalItems () {
-      /* eslint-disable */
-      dpd.usercount.get( (res, err) => {
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
-              this.totalItems = res.count
+      this.$axios.get(`/user`)
+        .then((res) => {
+          if (this.validResponse(res)) {
+            this.totalItems = res.count
           } else {
-              this.showError(res)
+            this.showError(res)
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.showError(err.response.data)
+        })
     },
     deleteItem (id) {
       this.loading = true
-      /* eslint-disable */
-        dpd.user.del(id,  (res, err) => {
+      this.$axios.delete(`/user/${id}`)
+        .then((res) => {
           this.loading = false
-          if(err) {
-            this.showError(err)
+          if (this.validResponse(res)) {
+            this.initData()
           } else {
-            if(this.validResponse(res)) {
-                this.initData()
-            } else {
-                this.showError(res)
-            }
+            this.showError(res)
           }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-        /* eslint-enable */
     }
   }
 }

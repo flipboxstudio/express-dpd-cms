@@ -50,28 +50,28 @@ export default {
       let query = new DpdQuery().login(this.username, this.password)
       if (this.$refs.loginForm.validate()) {
         this.loading = true
-        /* eslint-disable */
-        dpd.user.login(query.get(), (result, error) => {
-          this.loading = false
-          if(result) {
+        this.$axios.post(`/user/login`, query.get())
+          .then((res) => {
+            this.loading = false
             this.validateProfile()
-          } else {
-            alert(error.message || JSON.stringify(error.errors))
-          }
-        })
-        /* eslint-enable */
+          }).catch((err) => {
+            this.loading = false
+            alert(err.message || JSON.stringify(err.errors))
+          })
       }
     },
     validateProfile () {
-      /* eslint-disable */
-        dpd.user.me((result, error) => {
-          if(result && result.roles) {
-            result.roles.includes("admin") ? this.$router.push('dashboard') : alert('you are not an admin!')
-          } else {
-            alert(error.message || JSON.stringify(error.errors))
-          }
-        })
-        /* eslint-enable */
+      this.$axios({
+        method: 'get',
+        url: '/user/me'
+      }).then((res) => {
+        let data = res.data
+        if (data && data.roles) {
+          data.roles.includes('admin') ? this.$router.push('dashboard') : alert('you are not an admin!')
+        }
+      }).catch((err) => {
+        alert(err.message || JSON.stringify(err.errors))
+      })
     }
   }
 }

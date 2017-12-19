@@ -1,27 +1,6 @@
 <!DOCTYPE html>
 <!--[if IE 9]><html lang="en-US" class="lt-ie9 ie9" {{ HTML_ATTRS }}><![endif]-->
 <!--[if (gt IE 9)|!(IE)]><!--><html {{ HTML_ATTRS }}><!--<![endif]-->
-  <!-- dynamic dpd.js library -->
-  <!-- TODO obsfuscate and uglify this code later -->
-  <script src="http://localhost:8080/dpd.js"></script>
-  <script src="http://localhost:2403/dpd.js"></script>
-  <script src="/api/dpd.js"></script>
-  <script>
-    let currentUrl    = window.location.href
-    let dpdUrl        = 'http://localhost:8080/dpd.js'
-    let JSElement     = document.createElement('script')
-
-    // TODO change Url detection
-    if(window.location.href.includes('prodUrl')) {
-      dpdUrl = '/api/dpd.js'
-    } else if (window.location.href.includes('stagUrl')) {
-      dpdUrl = '/dpd.js'
-    } else {
-      dpdUrl = 'http://localhost:8080/dpd.js'
-    }
-    JSElement.src = dpdUrl
-    document.getElementsByTagName('head')[0].appendChild(JSElement)
-  </script>
   <head>
     {{ HEAD }}
   </head>

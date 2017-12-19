@@ -3,6 +3,12 @@
   "version": "1.0.0",
   "description": "Admin Panel for Flipbox CMS",
   "author": "Aqid <aqid@flipbox.co.id>",
+  "config": {
+    "nuxt": {
+      "host": "0.0.0.0",
+      "port": "3333"
+    }
+  },
   "scripts": {
     "dev": "nuxt",
     "build": "nuxt build",
@@ -11,13 +17,14 @@
     "generate-staging": "NODE_ENV=staging nuxt generate"
   },
   "dependencies": {
-    "config": "^1.26.2",
-    "nuxt": "^1.0.0-rc11",
-    "vue-no-ssr": "^0.2.0",
+    "config": "^1.28.1",
+    "nuxt": "^1.0.0-rc9",
+    "vue-no-ssr": "^0.2.2",
     "vue-quill-editor": "^2.3.3",
-    "vuetify": "^0.16.4"
+    "vuetify": "^0.16.9"
   },
   "devDependencies": {
+    "axios": "^0.17.1",
     "babel-eslint": "^7.2.3",
     "eslint": "^4.3.0",
     "eslint-config-standard": "^10.2.1",

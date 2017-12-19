@@ -1,6 +1,9 @@
 <!-- type of form : view/id, edit/id, create -->
 <template>
   <div>
+    <v-flex md3 xs4>
+      <locale-dropdown @changed="switchLocale($event)"></locale-dropdown>
+    </v-flex>
     <v-form ref="articleForm">
       <v-card class="pl-3 pr-3 pt-3 pb-3">
         <v-text-field label="Title" v-model="article.title" required :readonly="readonly" :rules="requiredField"></v-text-field>
@@ -14,16 +17,17 @@
               @input="updateDate">
             </date-time-picker>
           </v-flex>
-          <image-upload title="Featured Image" :imageData.sync="article.featuredImage" :maxFileSize="2048" :readonly="readonly" :preview="true"/>
+          <image-upload title="Featured Image" :imageData.sync="article.featuredImage" :maxFileSize="2048" :readonly="readonly" :preview="true"></image-upload>  
         </v-layout>
 
         <v-layout row wrap>
           <v-checkbox label="Featured" v-model="article.isFeatured" light :disabled="readonly"></v-checkbox>
           <v-checkbox label="Active" v-model="article.isActive" light :disabled="readonly"></v-checkbox>
         </v-layout>
+
       </v-card>
 
-      <text-editor :content="article.content.content" @update="article.content.content = $event" :readonly="readonly" :rules="requiredField"/>
+      <text-editor :content="article.content.content" @update="article.content.content = $event" :readonly="readonly" :rules="requiredField"/>  
 
       <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
     </v-form>
@@ -34,6 +38,7 @@
 import ImageUpload from '~/components/ImageUpload'
 import FormAction from '~/components/FormAction'
 import DateTimePicker from '~/components/DateTimePicker'
+import LocaleDropdown from '~/components/LocaleDropdown'
 import TextEditor from '~/components/TextEditor'
 import DpdQuery from '~/helpers/dpd-query'
 import form from '~/mixins/form'
@@ -41,14 +46,17 @@ import form from '~/mixins/form'
 export default {
   layout: 'admin',
   mixins: [form],
-  components: {ImageUpload, FormAction, DateTimePicker, TextEditor},
+  components: {ImageUpload, FormAction, DateTimePicker, TextEditor, LocaleDropdown},
   data () {
     return {
       loadingCategory: true,
       categories: [],
+      lang: process.env.defaultLocale,
       article: {
         title: '',
         slug: '',
+        type: 'article',
+        lang: process.env.defaultLocale,
         featuredImage: '',
         category: {
           id: '',
@@ -57,7 +65,7 @@ export default {
         isFeatured: false,
         isActive: false,
         content: {
-          date: `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()} ${new Date().getHours()}:${new Date().getMinutes()}`,
+          date: `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()} : 00:00`,
           location: '',
           content: ''
         },
@@ -71,10 +79,13 @@ export default {
     this.defaultDate()
   },
   methods: {
+    switchLocale (lang) {
+      this.lang = lang
+      this.article.lang = lang
+      this.initData()
+    },
     initData () {
-      this.article.lang = 'en'
-      this.article.type = 'article'
-      this.fetchCategories()
+      this.fetchPostCategories()
       if (this.$route.query.view || this.$route.query.edit) {
         this.fetchData(this.$route.query.view || this.$route.query.edit)
       }
@@ -82,82 +93,85 @@ export default {
     },
     defaultDate () {
       let date = new Date()
-      this.article.content.data = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} ${date.getHours()}:${date.getMinutes()}`
+      this.article.content.date = `${date.getFullYear()}-${date.getMonth()}-${date.getDate()} 00:00`
     },
     updateDate (ev) {
       this.article.content.date = ev
     },
-    fetchCategories () {
+    fetchPostCategories () {
       this.loadingCategory = true
-      /* eslint-disable */
-      dpd.category.get((res, err) => {
-        this.loadingCategory = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
-            this.categories = res
+      this.$axios.get(`/post/category`)
+        .then((res) => {
+          this.loadingCategory = false
+          if (this.validResponse(res.data)) {
+            this.categories = res.data
           } else {
-            this.showError(res)
+            this.showError(res.data)
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loadingCategory = false
+          this.showError(err.response.data)
+        })
     },
     fetchData (id) {
       this.loading = true
-      let query = new DpdQuery().filterBy('id', id).filterBy('type', 'article')
-      /* eslint-disable */
-      dpd.post.get(query.get(), (res, err) => {
-        this.loading = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
-            this.article = res
+      let query = new DpdQuery().filterBy('translationId', id).filterBy('type', 'article').filterBy('lang', this.lang)
+
+      this.$axios.get(`/post?${query.toString()}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res.data[0])) {
+            this.article = res.data[0]
           } else {
-            this.showError(res)
+            this.article.id = ''
+            this.article.title = ''
+            this.article.lang = this.lang
+            this.article.content = {
+              date: `${new Date().getFullYear()}-${new Date().getMonth()}-${new Date().getDate()} : 00:00`,
+              location: '',
+              content: ''
+            }
+            this.article.meta = { visit: 0 }
+            this.showError({message: `No translation found (${this.lang})`})
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
+        })
     },
     submitData () {
       if (this.$refs.articleForm.validate()) {
         this.loading = true
         this.article.category = this.article.category.id
-        /* eslint-disable */
-        dpd.post.post(this.article, (res, err) => {
-          this.loading = false
-          if(err) {
-            this.showError(err)
-          } else {
-            if(this.validResponse(res)) {
+
+        this.$axios.post('/post', this.article)
+          .then((res) => {
+            this.loading = false
+            if (this.validResponse(res)) {
               this.backToList()
             } else {
               this.showError(res)
             }
-          }
-        })
-        /* eslint-enable */
+          }).catch((err) => {
+            this.loading = false
+            this.showError(err.response.data)
+          })
       }
     },
     deleteData (id = this.$route.query.view) {
       this.loading = true
-      /* eslint-disable */
-        dpd.post.del(id,  (res, err) => {
-          this.loading =false
-            if(err) {
-              this.showError(err)
-            } else {
-              if(this.validResponse(res)) {
-                  this.backToList()
-              } else {
-                  this.showError(res)
-              }
-            }
+      this.$axios.delete(`/post/${id}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res)) {
+            this.backToList()
+          } else {
+            this.showError(res)
+          }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-        /* eslint-enable */
     }
   }
 }
@@ -168,4 +182,3 @@ export default {
   pointer-events: none
 }
 </style>
-
