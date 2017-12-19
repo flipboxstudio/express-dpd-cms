@@ -1,0 +1,21 @@
+{
+	"type": "Collection",
+	"properties": {
+		"slug": {
+			"name": "slug",
+			"type": "string",
+			"typeLabel": "string",
+			"required": true,
+			"id": "slug",
+			"order": 0
+		},
+		"contents": {
+			"name": "contents",
+			"type": "array",
+			"typeLabel": "array",
+			"required": false,
+			"id": "contents",
+			"order": 1
+		}
+	}
+}

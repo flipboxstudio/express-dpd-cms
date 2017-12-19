@@ -21,7 +21,7 @@
 			"name": "category",
 			"type": "string",
 			"typeLabel": "string",
-			"required": true,
+			"required": false,
 			"id": "category",
 			"order": 2
 		},
@@ -57,13 +57,21 @@
 			"id": "content",
 			"order": 6
 		},
+		"translationId": {
+			"name": "translationId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "translationId",
+			"order": 7
+		},
 		"isActive": {
 			"name": "isActive",
 			"type": "boolean",
 			"typeLabel": "boolean",
 			"required": false,
 			"id": "isActive",
-			"order": 7
+			"order": 8
 		},
 		"isFeatured": {
 			"name": "isFeatured",
@@ -71,7 +79,7 @@
 			"typeLabel": "boolean",
 			"required": false,
 			"id": "isFeatured",
-			"order": 8
+			"order": 9
 		},
 		"featuredImage": {
 			"name": "featuredImage",
@@ -79,7 +87,7 @@
 			"typeLabel": "object",
 			"required": false,
 			"id": "featuredImage",
-			"order": 9
+			"order": 10
 		},
 		"tags": {
 			"name": "tags",
@@ -87,7 +95,7 @@
 			"typeLabel": "array",
 			"required": false,
 			"id": "tags",
-			"order": 10
+			"order": 11
 		},
 		"meta": {
 			"name": "meta",
@@ -95,7 +103,7 @@
 			"typeLabel": "object",
 			"required": false,
 			"id": "meta",
-			"order": 11
+			"order": 12
 		},
 		"createdAt": {
 			"name": "createdAt",
@@ -103,7 +111,7 @@
 			"typeLabel": "date",
 			"required": false,
 			"id": "createdAt",
-			"order": 12
+			"order": 13
 		},
 		"updatedAt": {
 			"name": "updatedAt",
@@ -111,7 +119,7 @@
 			"typeLabel": "date",
 			"required": false,
 			"id": "updatedAt",
-			"order": 13
+			"order": 14
 		}
 	}
 }

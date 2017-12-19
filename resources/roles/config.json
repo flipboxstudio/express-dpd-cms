@@ -1,7 +1,7 @@
 {
-	"category": {
+	"career": {
 		"GET": "*",
-		"POST": "admin",
+		"POST": "admin,user",
 		"PUT": "admin",
 		"DELETE": "admin",
 		"properties": {}
@@ -20,7 +20,7 @@
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"page": {
+	"pages": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",

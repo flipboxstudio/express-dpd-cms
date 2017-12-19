@@ -8,14 +8,6 @@
 			"required": false,
 			"id": "name",
 			"order": 0
-		},
-		"meta": {
-			"name": "meta",
-			"type": "object",
-			"typeLabel": "object",
-			"required": false,
-			"id": "meta",
-			"order": 1
 		}
 	}
 }

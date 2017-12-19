@@ -49,13 +49,21 @@
 			"id": "content",
 			"order": 5
 		},
+		"translationId": {
+			"name": "translationId",
+			"type": "string",
+			"typeLabel": "string",
+			"required": false,
+			"id": "translationId",
+			"order": 6
+		},
 		"featuredImage": {
 			"name": "featuredImage",
 			"type": "string",
 			"typeLabel": "string",
 			"required": false,
 			"id": "featuredImage",
-			"order": 6
+			"order": 7
 		},
 		"tags": {
 			"name": "tags",
@@ -63,14 +71,6 @@
 			"typeLabel": "array",
 			"required": false,
 			"id": "tags",
-			"order": 7
-		},
-		"meta": {
-			"name": "meta",
-			"type": "object",
-			"typeLabel": "object",
-			"required": false,
-			"id": "meta",
 			"order": 8
 		},
 		"createdAt": {

@@ -16,14 +16,6 @@
 			"required": false,
 			"id": "content",
 			"order": 1
-		},
-		"meta": {
-			"name": "meta",
-			"type": "object",
-			"typeLabel": "object",
-			"required": false,
-			"id": "meta",
-			"order": 2
 		}
 	}
 }

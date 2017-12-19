@@ -1,4 +1,15 @@
 this.author = me ? me.username || 'guest' : ''
-if(ctx.method === 'GET' && !ctx.query.$sort) {
-    ctx.query.$sort = {updatedAt: -1}
+
+switch (event) {
+    case 'GET':
+        if (!ctx.query.$sort) {
+            ctx.query.$sort = { updatedAt: -1 }
+        }
+        break;
+    case 'POST':
+        break;
+    case 'PUT':
+        break;
+    case 'DELETE':
+        break;
 }

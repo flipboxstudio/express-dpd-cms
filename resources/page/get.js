@@ -1,0 +1,1 @@
+this.updatedAt = new Date(this.updatedAt).toDateString()

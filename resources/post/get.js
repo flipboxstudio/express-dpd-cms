@@ -29,13 +29,20 @@ if(ctx.query.id && !roles.includes("admin")) {
     })
 }
 
+//limit content return on list
+if(!(ctx.query.id || ctx.query.slug) && this.content.content && roles.includes("admin")) {
+    this.content.content = this.content.content.length > 200 ? this.content.content.replace(/<(?:.|\n)*?>/gm, '').substring(0, 200) + '...' : this.content.content
+}
+
 // default featured image
 if(!this.featuredImage) {
     this.featuredImage = {}
 }
 
 if(this.category) {
-    dpd.category.get(this.category, function(res, err) {
+    dpd.postcategory.get(this.category, function(res, err) {
         vm.category = res || {}
     })
 }
+
+this.updatedAt = new Date(this.updatedAt).toDateString()
