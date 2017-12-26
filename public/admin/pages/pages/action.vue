@@ -2,22 +2,24 @@
 <template>
   <div>
     <v-form ref="pageForm">
+      <v-flex md3 xs4>
+        <locale-dropdown @changed="switchLocale($event)"></locale-dropdown>
+      </v-flex>
       <v-card class="pl-3 pr-3 pt-3 pb-3">
         <v-text-field label="Title" v-model="page.title" required :readonly="readonly" :rules="requiredField"></v-text-field>
         <v-text-field label="Slug" v-model="page.slug" required :readonly="readonly" :rules="requiredField"></v-text-field>
         <v-text-field label="Subtitle" v-model="page.content.subtitle" :readonly="readonly"></v-text-field>
+        <v-text-field label="Content" v-model="page.content.content" required multi-line :readonly="readonly" :rules="requiredField"></v-text-field>
       </v-card>
-
-      <text-editor :content="page.content.content" @update="page.content.content = $event" :readonly="readonly" :rules="requiredField"/>
-
-      <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
+      <form-action @submit="submitData" @cancel="cancel" @edit="edit(page.translationId)" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
     </v-form>
   </div>
 </template>
 
 <script>
 import FormAction from '~/components/FormAction'
-import TextEditor from '~/components/TextEditor'
+import LocaleDropdown from '~/components/LocaleDropdown'
+import DpdQuery from '~/helpers/dpd-query'
 import form from '~/mixins/form'
 
 export default {
@@ -25,12 +27,14 @@ export default {
   mixins: [form],
   components: {
     FormAction,
-    TextEditor
+    LocaleDropdown
   },
   data () {
     return {
+      lang: process.env.defaultLocale,
       page: {
         title: '',
+        lang: process.env.defaultLocale,
         slug: '',
         content: {
           subtitle: '',
@@ -40,8 +44,12 @@ export default {
     }
   },
   methods: {
+    switchLocale (lang) {
+      this.lang = lang
+      this.page.lang = lang
+      this.initData()
+    },
     initData () {
-      this.page.lang = 'en'
       this.page.type = 'dynamic'
       if (this.$route.query.view || this.$route.query.edit) {
         this.fetchData(this.$route.query.view || this.$route.query.edit)
@@ -50,38 +58,42 @@ export default {
     },
     fetchData (id) {
       this.loading = true
-      /* eslint-disable */
-      dpd.pages.get(id, (res, err) => {
-        this.loading = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
-            this.page = res
+      let query = new DpdQuery().filterBy('translationId', id).filterBy('lang', this.lang)
+
+      this.$axios.get(`/page?${query.toString()}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res.data[0])) {
+            this.page = res.data[0]
           } else {
-            this.showError(res)
+            this.page.id = ''
+            this.page.title = ''
+            this.page.content.content = ''
+            this.showError({message: `No translation found (${this.lang})`})
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loading = false
+          this.page.id = ''
+          this.page.title = ''
+          this.page.content.content = ''
+          this.showError(err.response.data)
+        })
     },
     submitData () {
       if (this.$refs.pageForm.validate()) {
         this.loading = true
-        /* eslint-disable */
-        dpd.pages.post(this.page, (res, err) => {
-          this.loading = false
-          if(err) {
-            this.showError(err)
-          } else {
-            if(this.validResponse(res)) {
+        this.$axios.post('/page', this.page)
+          .then((res) => {
+            this.loading = false
+            if (this.validResponse(res)) {
               this.backToList()
             } else {
               this.showError(res)
             }
-          }
-        })
-        /* eslint-enable */
+          }).catch((err) => {
+            this.loading = false
+            this.showError(err.response.data)
+          })
       }
     },
     deleteData (id = this.$route.query.view) {
@@ -89,20 +101,18 @@ export default {
         alert('cannot delete static page ' + this.page.title)
       } else {
         this.loading = true
-        /* eslint-disable */
-          dpd.pages.del(id,  (res, err) => {
+        this.$axios.delete(`/page/${id}`)
+          .then((res) => {
             this.loading = false
-            if(err) {
-              this.showError(err)
+            if (this.validResponse(res.data)) {
+              this.backToList()
             } else {
-              if(this.validResponse(res)) {
-                  this.backToList()
-              } else {
-                  this.showError(res)
-              }
+              this.showError(res.data)
             }
+          }).catch((err) => {
+            this.loading = false
+            this.showError(err.response.data)
           })
-          /* eslint-enable */
       }
     }
   }

@@ -7,7 +7,7 @@ This is a simple Content Management System created with Express and Deployd as t
 **What's Inside?**
 
 - Express
-- Deployd 1.0.0 with
+- Deployd 1.1.1 with
 	- DPD Mail for mail functionality
 	- DPD Events for custom endpoints
 	- DPD File Upload for ... file upload 
@@ -19,10 +19,10 @@ This is a simple Content Management System created with Express and Deployd as t
 **How to Use?**
 
 - [Install MongoDB](https://docs.mongodb.com/manual/installation/)
-- [Install Deployd v1.0.0](https://github.com/deployd/deployd)
+- [Install Deployd v1.1.1](https://github.com/deployd/deployd)
 - `npm install` on root folder & `public/admin` folders
-- `dpd` on root folder **or** `dpd -H localhost -a usermongo:passmongo` or [run as node module](http://docs.deployd.com/docs/server/as-a-node-module.html) - you can use `node express-development.js` to start express server. Please remember to check the port used and change `public/admin/app.html` so that admin panel can get `dpd.js` file properly
-- `npm run dev` on `public/admin` to run the admin panel
+- use `node express-development.js` to start express server with `deployd`, will live at `localhost:8080`
+- `npm run dev` on `public/admin` to run the admin panel, will live at `localhost:3333`
 	- Environment is handled using `config` modules. Look for `public/admin/config/*.js` for admin panel environment configurations.
 
 
@@ -37,12 +37,13 @@ This is a simple Content Management System created with Express and Deployd as t
 	- Pages Module ( CRUD using admin panel, simple WYIWYG editor )
 	- Menus Module ( CRUD using admin panel, simple WYIWYG editor )
 	- Categories Module ( CRUD using admin panel, simple WYIWYG editor )
+	- Multi Language Support ( to add supported locale, please edit `public/admin/components/LocaleDropdown.vue` - dynamic CRUD localization coming soon! )
 	- and others...
 - Screenshot Plz!!
 
 First of all, this is the Deployd Dashboard : useful for data management
 
-![Deployd](https://puu.sh/y5ahk/40b71a18cd.png)
+![Deployd](https://puu.sh/yJIZl/fceadbb86e.png)
 
 Also, API documentations
 

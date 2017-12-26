@@ -1,7 +1,7 @@
 <template>
     <div>
         <h3>Post Categories Management</h3>
-        <v-btn class="indigo--text" outline @click="$router.push('/categories/action/')">Create Category</v-btn>
+        <v-btn class="indigo--text" outline @click="$router.push('/posts/categories/action/')">Create Post Category</v-btn>
         <v-data-table
             :headers="headers"
             :items="items"
@@ -54,53 +54,46 @@ export default {
     fetchItems (query) {
       this.loading = true
       query.sortBy('id', 'desc')
-      /* eslint-disable */
-        dpd.categories.get(query.get(), (res, err) => {
+      this.$axios.get(`/post/category?${query.toString()}`)
+        .then((res) => {
           this.loading = false
-          if(err) {
-            this.showError(err)
+          if (this.validResponse(res.data)) {
+            this.items = res.data
           } else {
-            if(this.validResponse(res)) {
-                this.items = res
-            } else {
-                this.showError(res)
-            }
+            this.showError(res.data)
           }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-      /* eslint-enable */
     },
     fetchTotalItems () {
       let query = new DpdQuery().count()
-      /* eslint-disable */
-        dpd.categories.get(query.get(),  (res, err) => {
-          if(err) {
-            this.showError(err)
+      this.$axios.get(`/post/category?${query.toString()}`)
+        .then((res) => {
+          if (this.validResponse(res)) {
+            this.totalItems = res.count
           } else {
-            if(this.validResponse(res)) {
-                this.totalItems = res.count
-            } else {
-                this.showError(res)
-            }
+            this.showError(res)
           }
+        }).catch((err) => {
+          this.showError(err.response.data)
         })
-      /* eslint-enable */
     },
     deleteItem (id) {
       this.loading = true
-      /* eslint-disable */
-        dpd.categories.del(id,  (res, err) => {
+      this.$axios.delete(`/post/category/${id}`)
+        .then((res) => {
           this.loading = false
-          if(err) {
-            this.showError(err)
+          if (this.validResponse(res)) {
+            this.initData()
           } else {
-            if(this.validResponse(res)) {
-                this.initData()
-            } else {
-                this.showError(res)
-            }
+            this.showError(res)
           }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-        /* eslint-enable */
     }
   }
 }

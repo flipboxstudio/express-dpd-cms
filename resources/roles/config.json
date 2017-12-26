@@ -1,19 +1,19 @@
 {
-	"categories": {
+	"career": {
+		"GET": "*",
+		"POST": "admin,user",
+		"PUT": "admin",
+		"DELETE": "admin",
+		"properties": {}
+	},
+	"menu": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"menus": {
-		"GET": "*",
-		"POST": "admin",
-		"PUT": "admin",
-		"DELETE": "admin",
-		"properties": {}
-	},
-	"posts": {
+	"post": {
 		"GET": "*",
 		"POST": "admin",
 		"PUT": "admin",
@@ -27,7 +27,7 @@
 		"DELETE": "admin",
 		"properties": {}
 	},
-	"users": {
+	"user": {
 		"GET": "admin,user",
 		"POST": "admin",
 		"PUT": "admin",

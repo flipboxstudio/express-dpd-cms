@@ -3,7 +3,7 @@
   <div>
     <v-form>
       <v-card class="pl-3 pr-3 pt-3 pb-3">
-        <v-text-field label="Name" v-model="category.name" required :readonly="readonly"></v-text-field>
+        <v-text-field label="Name" v-model="careerType.name" required :readonly="readonly"></v-text-field>
       </v-card>
 
       <form-action @submit="submitData" @cancel="cancel" @edit="edit" @remove="deleteData" :state="state" :readonly="readonly" :loading="loading"></form-action>
@@ -23,7 +23,7 @@ export default {
   },
   data () {
     return {
-      category: {
+      careerType: {
         name: ''
       }
     }
@@ -37,54 +37,49 @@ export default {
     },
     fetchData (id) {
       this.loading = true
-      /* eslint-disable */
-      dpd.categories.get(id, (res, err) => {
-        this.loading = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
-            this.category = res
+      this.$axios.get(`/post/category/${id}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res.data)) {
+            this.careerType = res.data
           } else {
-            this.showError(res)
+            this.showError(res.data)
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
+        })
     },
     submitData () {
       this.loading = true
-      /* eslint-disable */
-      dpd.categories.post(this.category, (res, err) => {
-        this.loading = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
+      this.$axios.post('/post/category', this.careerType)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res)) {
             this.backToList()
           } else {
             this.showError(res)
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
+        })
     },
     deleteData (id = this.$route.query.view) {
       this.loading = true
-      /* eslint-disable */
-        dpd.categories.del(id,  (res, err) => {
-          this.loading =false
-            if(err) {
-              this.showError(err)
-            } else {
-              if(this.validResponse(res)) {
-                  this.backToList()
-              } else {
-                  this.showError(res)
-              }
-            }
+
+      this.$axios.delete(`/post/category/${id}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res)) {
+            this.backToList()
+          } else {
+            this.showError(res)
+          }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-        /* eslint-enable */
     }
   }
 }

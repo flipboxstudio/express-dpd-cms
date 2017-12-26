@@ -24,9 +24,14 @@ if(this.type === 'event') {
 
 if(ctx.query.id && !roles.includes("admin")) {
     this.meta.visit++
-    dpd.posts.put(this, function(res, err) {
+    dpd.post.put(this, function(res, err) {
         if(err) console.log(err)
     })
+}
+
+//limit content return on list
+if(!(ctx.query.id || ctx.query.slug) && this.content.content && roles.includes("admin")) {
+    this.content.content = this.content.content.length > 200 ? this.content.content.replace(/<(?:.|\n)*?>/gm, '').substring(0, 200) + '...' : this.content.content
 }
 
 // default featured image
@@ -35,7 +40,9 @@ if(!this.featuredImage) {
 }
 
 if(this.category) {
-    dpd.categories.get(this.category, function(res, err) {
+    dpd.postcategory.get(this.category, function(res, err) {
         vm.category = res || {}
     })
 }
+
+this.updatedAt = new Date(this.updatedAt).toDateString()

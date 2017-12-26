@@ -49,73 +49,64 @@ export default {
     },
     fetchUserRoles () {
       this.loadingRole = true
-      /* eslint-disable */
-      dpd.userroles.get((res, err) => {
-        this.loadingRole = false
-        if(err) {
-          this.showError(err)
-        } else {
-
-        }
-        if(this.validResponse(res)) {
-          this.roles = res
-        } else {
-          this.showError(res)
-        }
-      })
-      /* eslint-enable */
+      this.$axios.get(`/user/role`)
+        .then((res) => {
+          this.loadingRole = false
+          if (this.validResponse(res.data)) {
+            this.roles = res.data
+          } else {
+            this.showError(res.data)
+          }
+        }).catch((err) => {
+          this.loadingRole = false
+          this.showError(err.response.data)
+        })
     },
     fetchData (id) {
       this.loading = true
-      /* eslint-disable */
-      dpd.users.get(id, (res, err) => {
-        this.loading = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
-            this.user = res
+      this.$axios.get(`/user/${id}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res.data)) {
+            this.user = res.data
           } else {
-            this.showError(res)
+            this.showError(res.data)
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
+        })
     },
     submitData () {
       this.loading = true
       this.user.roles = [this.user.roles.name]
-      /* eslint-disable */
-      dpd.users.post(this.user, (res, err) => {
-        this.loading = false
-        if(err) {
-          this.showError(err)
-        } else {
-          if(this.validResponse(res)) {
+      this.$axios.post('/user', this.user)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res)) {
             this.backToList()
           } else {
             this.showError(res)
           }
-        }
-      })
-      /* eslint-enable */
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
+        })
     },
     deleteData (id = this.$route.query.view) {
       this.loading = true
-      /* eslint-disable */
-        dpd.users.del(id,  (res, err) => {
-          this.loading =false
-            if(err) {
-              this.showError(err)
-            } else {
-              if(this.validResponse(res)) {
-                  this.backToList()
-              } else {
-                  this.showError(res)
-              }
-            }
+      this.$axios.delete(`/user/${id}`)
+        .then((res) => {
+          this.loading = false
+          if (this.validResponse(res)) {
+            this.backToList()
+          } else {
+            this.showError(res)
+          }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-        /* eslint-enable */
     }
   }
 }

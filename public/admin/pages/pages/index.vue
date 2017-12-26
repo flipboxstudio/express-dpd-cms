@@ -2,6 +2,9 @@
     <div>
         <h3>Pages Management</h3>
         <v-btn class="indigo--text" outline @click="$router.push('/pages/action/')">Create Pages</v-btn>
+        <v-flex md3 xs4 offset-md9 offset-xs8>
+          <locale-dropdown @changed="switchLocale($event)"></locale-dropdown>
+        </v-flex>
         <v-data-table
             :headers="headers"
             :items="items"
@@ -11,12 +14,12 @@
             :loading="loading"
             class="elevation-1">
             <template slot="items" scope="props">
-                <td><a @click="detail(props.item.id)" href="javascript:;">{{props.item.title}}</a></td>
+                <td><a @click="detail(props.item.translationId)" href="javascript:;">{{props.item.title}}</a></td>
                 <td>{{props.item.type}}</td>
                 <td>{{props.item.content.subtitle}}</td>
                 <td>{{props.item.updatedAt}}</td>
                 <td class="text-xs-right">
-                    <list-action :id="props.item.id" @edit="edit" @remove="deleteItem(props.item)"></list-action>
+                    <list-action :id="props.item.id" @edit="edit(props.item.translationId)" @remove="deleteItem(props.item)"></list-action>
                 </td>
             </template>
         </v-data-table>
@@ -26,16 +29,19 @@
 <script>
 import list from '~/mixins/list'
 import ListAction from '~/components/ListAction'
+import LocaleDropdown from '~/components/LocaleDropdown'
 import DpdQuery from '~/helpers/dpd-query'
 
 export default {
   layout: 'admin',
   mixins: [list],
   components: {
-    ListAction
+    ListAction,
+    LocaleDropdown
   },
   data () {
     return {
+      lang: process.env.defaultLocale,
       headers: [
         {
           text: 'Page Title',
@@ -63,58 +69,57 @@ export default {
     }
   },
   methods: {
+    switchLocale (val) {
+      this.lang = val
+      this.initData()
+    },
     fetchItems (query) {
       this.loading = true
-      query.sortBy('updatedAt', 'desc')
-      /* eslint-disable */
-        dpd.pages.get(query.get(),  (res, err) => {
+      query.sortBy('updatedAt', 'desc').filterBy('lang', this.lang)
+
+      this.$axios.get(`/page?${query.toString()}`)
+        .then((res) => {
           this.loading = false
-          if(err) {
-            this.showError(err)
+          if (this.validResponse(res.data)) {
+            this.items = res.data
           } else {
-            if(this.validResponse(res)) {
-                this.items = res
-            } else {
-                this.showError(res)
-            }
+            this.showError(res.data)
           }
+        }).catch((err) => {
+          this.loading = false
+          this.showError(err.response.data)
         })
-      /* eslint-enable */
     },
     fetchTotalItems () {
-      /* eslint-disable */
-        dpd.pages.get(new DpdQuery().count().get(),  (res, err) => {
-          if(err) {
-            this.showError(err)
+      let query = new DpdQuery().filterBy('lang', this.lang).count()
+      this.$axios.get(`/page?${query.toString()}`)
+        .then((res) => {
+          if (this.validResponse(res)) {
+            this.totalItems = res.count
           } else {
-            if(this.validResponse(res)) {
-                this.totalItems = res.count
-            } else {
-                this.showError(res)
-            }
+            this.showError(res)
           }
+        }).catch((err) => {
+          this.showError(err.response.data)
         })
-      /* eslint-enable */
     },
     deleteItem (item) {
       if (item.type === 'static') {
         alert('cannot delete static page ' + item.title)
       } else {
         this.loading = true
-        /* eslint-disable */
-          dpd.pages.del(item.id,  (res, err) => {
+        this.$axios.delete(`/page/${item.id}`)
+          .then((res) => {
             this.loading = false
-            if(err) {
-              this.showError(err)
+            if (this.validResponse(res.data)) {
+              this.initData()
             } else {
-              if(this.validResponse(res)) {
-                  this.initData()
-              } else {
-                  this.showError(res)
-              }
+              this.showError(res.data)
             }
+          }).catch((err) => {
+            this.loading = false
+            this.showError(err.response.data)
           })
-          /* eslint-enable */
       }
     }
   }

@@ -57,7 +57,7 @@ export default {
 
       vm.loadingUpload = true
       let xhr = new XMLHttpRequest()
-      xhr.open('POST', `${process.env.backendUrl}/files?subdir=${subdir}&comments=${comments}&uniqueFilename=${uniqueFilename}&thumbnail=${thumbnail}&thumbnailWidth=${thumbnailWidth}`)
+      xhr.open('POST', `${process.env.backendUrl}/file?subdir=${subdir}&comments=${comments}&uniqueFilename=${uniqueFilename}&thumbnail=${thumbnail}&thumbnailWidth=${thumbnailWidth}`)
       xhr.onload = function () {
         vm.loadingUpload = false
         let response = JSON.parse(this.responseText)

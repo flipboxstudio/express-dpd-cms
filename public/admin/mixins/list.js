@@ -22,10 +22,10 @@ export default {
       deep: true
     }
   },
-  mounted () {
-    this.initData()
-  },
   methods: {
+    switchLocale (val) {
+      console.warn('please implement switchLocale inside list')
+    },
     initData () {
       this.loading = true
       this.fetchItems(new DpdQuery().limit(this.pagination.rowsPerPage).page(this.pagination.page))

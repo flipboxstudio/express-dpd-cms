@@ -24,6 +24,7 @@ module.exports = {
   plugins: [
     '~/plugins/vuetify.js',
     '~/plugins/no-ssr.js',
+    '~/plugins/axios.js',
     { src: '~/plugins/vue-quill-editor.js', ssr: false }
   ],
   css: [
@@ -40,7 +41,7 @@ module.exports = {
   ** Build configuration
   */
   build: {
-    vendor: ['vuetify'],
+    vendor: ['vuetify','axios'],
     extractCSS: true,
     /*
     ** Run ESLINT on save
